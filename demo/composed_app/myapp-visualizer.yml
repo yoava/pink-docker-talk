@@ -1,0 +1,48 @@
+version: "3"
+services:
+  web:
+    image: yoava/myapp:0.02
+    depends_on:
+      - redis
+    deploy:
+      replicas: 3
+      # mode: global
+      update_config:
+        parallelism: 2
+        delay: 1s
+      resources:
+        limits:
+          cpus: "1"
+          memory: 50M
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "80:80"
+    networks:
+      - appnet
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8888:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+        - net2
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - /home/yoava/redis_data:/data
+    deploy:
+      placement:
+        constraints: [node.hostname == ubuntu1]
+    networks:
+      - appnet
+networks:
+  appnet:
+    driver: overlay
+  net2:
