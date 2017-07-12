@@ -1,7 +1,13 @@
 {
   "name": "node_app",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "author": "Yoav Aharoni",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./server.js"
+  },
+  "dependencies": {
+    "express": "^4.15.3"
+  }
 }
